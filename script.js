@@ -1,139 +1,112 @@
-// --- 1. CD 唱片點擊滑出與音樂播放連動 ---
+// 1. 漢堡選單開關邏輯
+const hamburgerBtn = document.getElementById('hamburgerBtn');
+const navLinks = document.getElementById('navLinks');
+
+if (hamburgerBtn && navLinks) {
+    hamburgerBtn.addEventListener('click', () => {
+        hamburgerBtn.classList.toggle('open');
+        navLinks.classList.toggle('active');
+    });
+
+    // 點擊選單連結後自動關閉下拉選單
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        link.addEventListener('click', () => {
+            hamburgerBtn.classList.remove('open');
+            navLinks.classList.remove('active');
+        });
+    });
+}
+
+// 2. CD 唱片播放控制
 const cdPlayer = document.getElementById('cdPlayer');
 const bgMusic = document.getElementById('bgMusic');
 const musicBtn = document.getElementById('musicBtn');
 let isPlaying = false;
 
 function toggleCD() {
-    // 切換 CD 展開 / 收回 Class
-    cdPlayer.classList.toggle('active');
-
-    // 播放或暫停音樂
-    if (cdPlayer.classList.contains('active')) {
-        bgMusic.play().then(() => {
-            isPlaying = true;
-            musicBtn.textContent = '⏸ 暫停音樂';
-        }).catch(err => {
-            console.log("自動播放受限：", err);
-        });
-        
-        // 點擊封面時產生花瓣散落效果
-        const rect = cdPlayer.getBoundingClientRect();
-        createPetalBurst(rect.left + rect.width / 2, rect.top + rect.height / 2);
+    isPlaying = !isPlaying;
+    if (isPlaying) {
+        cdPlayer.classList.add('active');
+        bgMusic.play().catch(e => console.log('音樂播放失敗或尚未載入檔名：', e));
+        musicBtn.textContent = '⏸️';
     } else {
+        cdPlayer.classList.remove('active');
         bgMusic.pause();
-        isPlaying = false;
-        musicBtn.textContent = '🎵 靜心音樂';
+        musicBtn.textContent = '🎵';
     }
 }
 
-// 右上角按鈕手動播放/暫停音樂
-musicBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    if (isPlaying) {
-        bgMusic.pause();
-        cdPlayer.classList.remove('active');
-        musicBtn.textContent = '🎵 靜心音樂';
-    } else {
-        bgMusic.play();
-        cdPlayer.classList.add('active');
-        musicBtn.textContent = '⏸ 暫停音樂';
-    }
-    isPlaying = !isPlaying;
-});
+if (musicBtn) {
+    musicBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleCD();
+    });
+}
 
-
-// --- 2. Canvas 古風飄落花瓣特效 ---
+// 3. 飄落花瓣波瀾背景 Dynamic Canvas
 const canvas = document.getElementById('inkCanvas');
 const ctx = canvas.getContext('2d');
 
-let petals = [];
-
+let width, height;
 function resizeCanvas() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    width = canvas.width = window.innerWidth;
+    height = canvas.height = window.innerHeight;
 }
 window.addEventListener('resize', resizeCanvas);
 resizeCanvas();
 
-// 花瓣粒子類別
+const petals = [];
+const numPetals = 35;
+
 class Petal {
-    constructor(x, y, isBurst = false) {
-        this.x = x || Math.random() * canvas.width;
-        this.y = y || -10;
-        this.size = Math.random() * 8 + 6; // 花瓣大小
-        this.speedY = isBurst ? (Math.random() - 0.5) * 4 : Math.random() * 1 + 0.8; // 下落速度
-        this.speedX = isBurst ? (Math.random() - 0.5) * 4 : Math.random() * 0.8 - 0.4; // 左右隨風飄動
-        this.rotation = Math.random() * 360; // 旋轉角度
-        this.rotationSpeed = (Math.random() - 0.5) * 2;
-        this.alpha = 1;
-        this.fadeSpeed = isBurst ? 0.015 : 0.003; // 2-3秒內自然淡出
-        
-        // 古風朱紅/粉色系配色
-        const colors = ['#e8a7a1', '#c75450', '#8c2423', '#f2c3c0'];
-        this.color = colors[Math.floor(Math.random() * colors.length)];
+    constructor() {
+        this.reset();
+    }
+
+    reset() {
+        this.x = Math.random() * width;
+        this.y = Math.random() * height - height;
+        this.size = Math.random() * 8 + 6;
+        this.speedY = Math.random() * 1.2 + 0.8;
+        this.speedX = Math.random() * 0.6 - 0.3;
+        this.opacity = Math.random() * 0.5 + 0.3;
+        this.rotation = Math.random() * 360;
+        this.rotSpeed = Math.random() * 2 - 1;
+    }
+
+    update() {
+        this.y += this.speedY;
+        this.x += this.speedX + Math.sin(this.y * 0.01) * 0.5;
+        this.rotation += this.rotSpeed;
+
+        if (this.y > height + 20) {
+            this.reset();
+            this.y = -10;
+        }
     }
 
     draw() {
         ctx.save();
         ctx.translate(this.x, this.y);
         ctx.rotate((this.rotation * Math.PI) / 180);
+        ctx.fillStyle = `rgba(216, 112, 147, ${this.opacity})`;
         ctx.beginPath();
-        // 繪製水滴/花瓣形狀
-        ctx.moveTo(0, 0);
-        ctx.quadraticCurveTo(this.size, -this.size, this.size, 0);
-        ctx.quadraticCurveTo(this.size, this.size, 0, this.size * 1.5);
-        ctx.quadraticCurveTo(-this.size, this.size, -this.size, 0);
-        ctx.quadraticCurveTo(-this.size, -this.size, 0, 0);
-        
-        ctx.fillStyle = this.color;
-        ctx.globalAlpha = Math.max(0, this.alpha);
+        ctx.ellipse(0, 0, this.size, this.size / 2, 0, 0, Math.PI * 2);
         ctx.fill();
         ctx.restore();
     }
-
-    update() {
-        this.x += this.speedX;
-        this.y += this.speedY;
-        this.rotation += this.rotationSpeed;
-        this.alpha -= this.fadeSpeed;
-    }
 }
 
-// 動畫繪製循環
+for (let i = 0; i < numPetals; i++) {
+    petals.push(new Petal());
+}
+
 function animate() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // 偶爾隨機從上方飄落一片花瓣
-    if (Math.random() < 0.05) {
-        petals.push(new Petal());
-    }
-
-    for (let i = petals.length - 1; i >= 0; i--) {
-        const petal = petals[i];
+    ctx.clearRect(0, 0, width, height);
+    petals.forEach(petal => {
         petal.update();
         petal.draw();
-
-        // 落地或完全透明後移除
-        if (petal.alpha <= 0 || petal.y > canvas.height + 20) {
-            petals.splice(i, 1);
-        }
-    }
-
+    });
     requestAnimationFrame(animate);
 }
 animate();
-
-// 滑鼠移動時隨風飄出微小花瓣
-window.addEventListener('mousemove', (e) => {
-    if (Math.random() < 0.1) {
-        petals.push(new Petal(e.clientX, e.clientY, true));
-    }
-});
-
-// 點擊散開花瓣
-function createPetalBurst(x, y) {
-    for (let i = 0; i < 12; i++) {
-        petals.push(new Petal(x, y, true));
-    }
-}
