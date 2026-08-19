@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>｛Alin的介紹｝</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- 花瓣背景動態畫布 -->
+    <canvas id="inkCanvas"></canvas>
+
+    <!-- 主體內容包裝 -->
+    <div class="container">
+        
+        <!-- 頂部導航選單 -->
+        <nav class="navbar">
+            <div class="logo">A-Lin</div>
+            <ul class="nav-links">
+                <li><a href="#debut">出道幾年</a></li>
+                <li><a href="#songs">歌曲介紹</a></li>
+                <li><a href="#music-options">音樂選項</a></li>
+                <li><a href="#tours">巡迴演唱會</a></li>
+                <li><a href="#feat">合作單曲</a></li>
+                <li><a href="#hosting">主持作品</a></li>
+            </ul>
+            <button id="musicBtn" class="btn-icon">🎵 靜心音樂</button>
+        </nav>
+
+        <!-- 英雄區 (Hero Section)：大圖 + CD 旋轉互動 -->
+        <header class="hero">
+            
+            <div class="vertical-title">
+                <span class="char title-main">天生歌姬</span>
+                <span class="char title-sub">黃麗玲 · A-Lin</span>
+            </div>
+
+            <!-- CD 唱片互動模組區 -->
+            <div class="cd-player-container" id="cdPlayer" onclick="toggleCD()">
+                <div class="cd-disc" id="cdDisc">
+                    <div class="cd-center-hole"></div>
+                </div>
+
+                <div class="album-cover">
+                    <img src="https://v3-statics.mirrormedia.mg/images/20230713145444-6abab3c65aff85507b4ec1fcec4e4094.jpg" alt="A-Lin 封面照" id="coverImg">
+                    <div class="cover-overlay">
+                        <span>點擊播放 A-Lin</span>
+                    </div>
+                </div>
+            </div>
+
+            <p class="hero-desc">
+                點擊封面唱片，聆聽《給我一個理由忘記》。<br>
+                滑鼠於背景游移，飄落粉紅花瓣波瀾。
+            </p>
+
+        </header>
+
+        <!-- 區塊 1：出道幾年 -->
+        <section class="section-card" id="debut">
+            <h2>✨ 出道幾年</h2>
+            <p>A-Lin（黃麗玲）於 <strong>2006 年 2 月 10 日</strong> 發行首張個人專輯《失戀無罪》正式出道。</p>
+            <p>至今已走過 <strong>20 個年頭</strong>！從「天生歌姬」一路踏上第 34 屆金曲獎「最佳華語女歌手」寶座，用最溫暖撼動人心的嗓音陪伴全球歌迷無數個深夜。  </p>
+        </section>
+
+        <!-- 區塊 2：歌曲介紹 -->
+        <section class="section-card" id="songs">
+            <h2>🎶 歌曲介紹：〈給我一個理由忘記〉</h2>
+            <p>收錄於 2010 年專輯《寂寞不痛》，由游政豪作曲、鄔裕康填詞。歌曲展現了 A-Lin 極具爆發力且深情的廣闊音域，歌詞道出失戀後無法釋懷的痛楚與對愛情的執著，是華語樂壇最具代表性的傷性感傷神曲之一。</p>
+        </section>
+
+        <!-- 區塊 3：音樂選項 -->
+        <section class="section-card" id="music-options">
+            <h2>🎧 音樂選項 (熱門代表作)</h2>
+            <div class="tag-grid">
+                <span class="tag">《失戀無罪》</span>
+                <span class="tag">《給我一個理由忘記》</span>
+                <span class="tag">《幸福了 然後呢》</span>
+                <span class="tag">《有一種悲傷》</span>
+                <span class="tag">《大師兄》</span>
+                <span class="tag">《摯友》</span>
+            </div>
+        </section>
+
+        <!-- 區塊 4：巡迴演唱會 -->
+        <section class="section-card" id="tours">
+            <h2>🎤 巡迴演唱會</h2>
+            <ul class="custom-list">
+                <li><strong>2011–2012</strong>：《仲夏.夢》世界巡迴演唱會</li>
+                <li><strong>2013</strong>：《Feel-Lin》巡迴演唱會（首度攻頂台北小巨蛋）</li>
+                <li><strong>2015–2018</strong>：《SONAR 聲吶》世界巡迴演唱會</li>
+                <li><strong>2020–2021</strong>：《Passenger 旅.課》世界巡迴演唱會</li>
+                <li><strong>2022–2025</strong>：《A-LINK with PASSENGERS》世界巡迴演唱會</li>
+                <li><strong>2026</strong>：《歌跡 Journey》世界巡迴演唱會</li>
+            </ul>
+        </section>
+
+        <!-- 區塊 5：合作單曲 -->
+        <section class="section-card" id="feat">
+            <h2>🤝 合作單曲 (Featured Singles)</h2>
+            <ul class="custom-list">
+                <li>〈狂風裡擁抱〉— 與 信（蘇見信）合唱</li>
+                <li>〈920〉— 與 小宇（宋念宇）合唱</li>
+                <li>〈我們必將相遇〉— 與 葉懷佩 合唱</li>
+                <li>〈天亮以後說分手〉— 與 倪安東 合唱</li>
+            </ul>
+        </section>
+
+        <!-- 區塊 6：主持作品 -->
+        <section class="section-card" id="hosting">
+            <h2>📺 主持作品與綜藝展演</h2>
+            <p>除了歌唱天賦外，A-Lin 也展示了幽默隨和的主持風采：</p>
+            <ul class="custom-list">
+                <li>《乘風2023》（浪姐4）常駐嘉賓演出</li>
+                <li>《我是歌手》第三季競演嘉賓</li>
+                <li>各大型音樂頒獎典禮演出與跨界特別主持嘉賓</li>
+            </ul>
+        </section>
+
+        <!-- 頁尾 -->
+        <footer>
+            <p>© 2026 A-Lin 黃麗玲 Fan Page | ｛Alin的介紹｝</p>
+        </footer>
+
+    </div>
+
+    <!-- 背景音樂 -->
+    <audio id="bgMusic" loop src="alin-forget.mp3"></audio>
+
+    <script src="script.js"></script>
+</body>
+</html>
